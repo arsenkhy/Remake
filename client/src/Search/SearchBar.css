@@ -1,0 +1,44 @@
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+  }  
+  
+  .search-input {
+    width: 100%;
+    max-width: 400px;
+    height: 60px;
+    position: relative;
+    border-radius: 4px;
+    background-color: #f2f2f2;
+    padding: 10px;
+  }
+  
+  .search-input:hover {
+    background-color: #fffeff8d;
+  }
+  
+  .search-option {
+    background-color: #592b9200;
+  }
+  
+  .search-option:hover {
+    background-color: #e6e6e6;
+  }
+  
+  .search-indicator {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+  }
+
+  .MuiAutocomplete-root {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  
