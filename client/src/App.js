@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SearchBar from './Search/SearchBar';
 import './Search/SearchBar.css';
+import ImageDisplay from './ImageDisplay/ImageDisplay';
 import './App.css';
 
 const App = () => {
@@ -14,14 +15,21 @@ const App = () => {
   }, []);
 
   return (
-    <div className="search-container-wrapper">
-      <header>
-        <h1>{message}</h1>
-      </header>
-      {/* Render the SearchBar component */}
-      <SearchBar />
+    <div className="app-container">
+      <div className="header-wrapper">
+        <header>
+          <h1>{message}</h1>
+        </header>
+        <div className="image-wrapper">
+          <ImageDisplay />
+        </div>
+        <div className="search-wrapper">
+          <SearchBar />
+        </div>
+      </div>
     </div>
   );
+  
 };
 
 export default App;

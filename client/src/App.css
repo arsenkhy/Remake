@@ -4,13 +4,18 @@
     align-items: center;
     height: 100vh;
   }
-  
-  @media screen and (max-width: 768px) {
-    .App {
-      flex-direction: column;
-    }
+
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
   }
-  
+
+   /* SearchContainer */
   .search-container-wrapper {
     max-width: 400px;
     margin: 0 auto;
