@@ -20,9 +20,9 @@ const App = () => {
         <header>
           <h1>{message}</h1>
         </header>
-        <div className="image-wrapper">
+        {/* <div className="image-wrapper">
           <ImageDisplay />
-        </div>
+        </div> */}
         <div className="search-wrapper">
           <SearchBar />
         </div>
