@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SearchBar from './Search/SearchBar';
 import './Search/SearchBar.css';
-import ImageDisplay from './ImageDisplay/ImageDisplay';
+import ImageDisplay from './ImageDisplay/ImagesButtons';
 import './App.css';
 
 const App = () => {

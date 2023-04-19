@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './ImageDisplay.css';
+import './Image.css';
 
 const Image = ({ imageURL }) => {
   return (

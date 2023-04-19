@@ -3,7 +3,7 @@ import axios from 'axios';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import allowedMovies from './data/allowed_movies.json';
-import ImageDisplay from '../ImageDisplay/ImageDisplay';
+import ImageDisplay from '../ImageDisplay/ImagesButtons';
 import Image from '../ImageDisplay/Image';
 import './SearchBar.css';
 
