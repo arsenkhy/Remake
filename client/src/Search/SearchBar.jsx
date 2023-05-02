@@ -7,11 +7,11 @@ import ImageDisplay from '../ImageDisplay/ImagesButtons';
 import Image from '../ImageDisplay/Image';
 import './SearchBar.css';
 
-const imageUrls = [
-  'https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg?cs=srgb&dl=pexels-pixabay-268533.jpg&fm=jpg',
-  'https://images.freeimages.com/images/previews/ac9/railway-hdr-1361893.jpg',
-  'https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg?cs=srgb&dl=pexels-pixabay-268533.jpg&fm=jpg'
-];
+// const imageUrls = [
+//   'https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg?cs=srgb&dl=pexels-pixabay-268533.jpg&fm=jpg',
+//   'https://images.freeimages.com/images/previews/ac9/railway-hdr-1361893.jpg',
+//   'https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg?cs=srgb&dl=pexels-pixabay-268533.jpg&fm=jpg'
+// ];
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -19,8 +19,21 @@ const Search = () => {
   const [submitCount, setSubmitCount] = useState(0);
   const [selectedImageURL, setSelectedImageURL] = useState();
   const [imageDisplays, setImageDisplays] = useState([]);
-  
+  const [imageUrls, setImageUrls] = useState([]);
 
+  useEffect(() => {
+    const fetchImageUrls = async () => {
+      try {
+        const response = await fetch('http://localhost:5050/movies/645078ec2096d5876c9a91b5');
+        const movie = await response.json();
+        setImageUrls(movie.images);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchImageUrls();
+  }, []);
+  
   useEffect(() => {
     const fetchMovieTitles = async () => {
       try {
@@ -58,8 +71,10 @@ const Search = () => {
 
 
   useEffect(() => {
-    handleFormSubmit({preventDefault: () => {}})
-  }, []);
+    if (imageUrls.length > 0) {
+      handleFormSubmit({preventDefault: () => {}});
+    }
+  }, [imageUrls]);  
 
   return (
     <div>

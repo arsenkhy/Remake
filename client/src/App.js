@@ -20,12 +20,9 @@ const App = () => {
         <header>
           <h1>{message}</h1>
         </header>
-        {/* <div className="image-wrapper">
-          <ImageDisplay />
-        </div> */}
-        <div className="search-wrapper">
-          <SearchBar />
-        </div>
+      <div className="search-wrapper">
+        <SearchBar />
+      </div>
       </div>
     </div>
   );
