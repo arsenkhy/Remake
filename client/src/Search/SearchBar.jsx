@@ -2,16 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
+import debounce from 'lodash/debounce';
 import allowedMovies from './data/allowed_movies.json';
 import ImageDisplay from '../ImageDisplay/ImagesButtons';
 import Image from '../ImageDisplay/Image';
 import './SearchBar.css';
-
-// const imageUrls = [
-//   'https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg?cs=srgb&dl=pexels-pixabay-268533.jpg&fm=jpg',
-//   'https://images.freeimages.com/images/previews/ac9/railway-hdr-1361893.jpg',
-//   'https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg?cs=srgb&dl=pexels-pixabay-268533.jpg&fm=jpg'
-// ];
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -37,21 +32,27 @@ const Search = () => {
   useEffect(() => {
     const fetchMovieTitles = async () => {
       try {
-        const response = await axios.get('https://api.themoviedb.org/3/search/movie', {
+        const response = await axios.get('http://localhost:5050/search', {
           params: {
-            api_key: '8baba8ab6b8bbe247645bcae7df63d0d',
             query: searchTerm
           }
         });
-        const matches = response.data.results.filter(movie => allowedMovies.movies.includes(movie.title));
-        const titles = matches.map(movie => movie.title);
-        setOptions(titles);
+        setOptions(response.data);
       } catch (error) {
         console.error(error);
       }
-    };      
-    fetchMovieTitles();
+    };
+
+    // Debounce the API call
+    const debouncedFetchMovieTitles = debounce(fetchMovieTitles, 500);
+    debouncedFetchMovieTitles();
+
+    // Cancel the previous API call when the searchTerm changes
+    return () => {
+      debouncedFetchMovieTitles.cancel();
+    };
   }, [searchTerm]);
+
 
   const handleFormSubmit = event => {
     event.preventDefault();
