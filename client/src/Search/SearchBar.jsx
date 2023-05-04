@@ -37,21 +37,23 @@ const Search = () => {
             query: searchTerm
           }
         });
-        setOptions(response.data);
+        const titles = response.data.map(movie => movie.title);
+        setOptions(titles);
       } catch (error) {
         console.error(error);
       }
     };
-
+  
     // Debounce the API call
-    const debouncedFetchMovieTitles = debounce(fetchMovieTitles, 500);
+    const debouncedFetchMovieTitles = debounce(fetchMovieTitles, 200);
     debouncedFetchMovieTitles();
-
+  
     // Cancel the previous API call when the searchTerm changes
     return () => {
       debouncedFetchMovieTitles.cancel();
     };
   }, [searchTerm]);
+  
 
 
   const handleFormSubmit = event => {

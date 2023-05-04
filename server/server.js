@@ -34,13 +34,20 @@ app.get('/search', cache('5 minutes'), async (req, res) => {
         query: query
       }
     });
-    const matches = response.data.results.map(movie => movie.title);
-    res.json(matches);
+
+    const popularMovies = response.data.results.filter(movie => movie.popularity > 20).slice(0, 5).map(movie => ({
+      id: movie.id,
+      title: movie.title,
+      release_date: movie.release_date
+    }));
+    
+    res.json(popularMovies);
   } catch (error) {
     console.error(error);
     res.status(500).send('Error fetching data');
   }
 });
+
 
 
 
