@@ -3,7 +3,6 @@ import axios from 'axios';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import debounce from 'lodash/debounce';
-import allowedMovies from './data/allowed_movies.json';
 import ImageDisplay from '../ImageDisplay/ImagesButtons';
 import Image from '../ImageDisplay/Image';
 import './SearchBar.css';
@@ -15,19 +14,22 @@ const Search = () => {
   const [selectedImageURL, setSelectedImageURL] = useState();
   const [imageDisplays, setImageDisplays] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
+  const [initialMovieId, setInitialMovieId] = useState('');
+  const [searchedMovieId, setSearchedMovieId] = useState('');
 
   useEffect(() => {
     const fetchImageUrls = async () => {
       try {
-        const response = await fetch('http://localhost:5050/movies/645078ec2096d5876c9a91b5');
+        const response = await fetch('http://localhost:5050/movies/day/1');
         const movie = await response.json();
         setImageUrls(movie.images);
+        setInitialMovieId(movie.movieID);
       } catch (error) {
         console.error(error);
       }
     }
     fetchImageUrls();
-  }, []);
+  }, []);  
   
   useEffect(() => {
     const fetchMovieTitles = async () => {
@@ -37,8 +39,7 @@ const Search = () => {
             query: searchTerm
           }
         });
-        const titles = response.data.map(movie => movie.title);
-        setOptions(titles);
+        setOptions(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -52,17 +53,33 @@ const Search = () => {
     return () => {
       debouncedFetchMovieTitles.cancel();
     };
-  }, [searchTerm]);
+  }, [searchTerm]);  
+
+
+  const renderCongratulations = (searchTerm, searchID, initialID) => {
+    const congratsElement = document.createElement('div');
+    congratsElement.innerText = `Congratulations! You found movie "${searchTerm}" with searchID ${searchID} and initialID ${initialID}`;
+    document.body.appendChild(congratsElement);
+  }
+  
+  const handleFormSubmit = (event, searchTerm) => {
+    event.preventDefault();
+  
+    const searchQuery = options.find(movie => movie.title === searchTerm) || {};
+    if (searchQuery.id === initialMovieId) {
+      renderCongratulations(searchTerm, searchQuery.id, initialMovieId);
+    } else {
+      console.log(`Incorrect! "${searchTerm}" is not right movie title. Try again!`);
+      if (submitCount < 3) {
+        setImageDisplays([...imageDisplays, <ImageDisplay key={imageDisplays.length + 1} imageNumber={imageDisplays.length + 1} imageURL={imageUrls[submitCount]} setSelectedImageURL={setSelectedImageURL} />]);
+        setSubmitCount(submitCount + 1);
+      } 
+    }
+  
   
 
-
-  const handleFormSubmit = event => {
-    event.preventDefault();
-    if (submitCount < 3) {
-      setImageDisplays([...imageDisplays, <ImageDisplay key={imageDisplays.length + 1} imageNumber={imageDisplays.length + 1} imageURL={imageUrls[submitCount]} setSelectedImageURL={setSelectedImageURL} />]);
-      setSubmitCount(submitCount + 1);
-    }
   };
+  
 
   useEffect(() => {
     const newButton = document.querySelector('.image-button:last-child');
@@ -70,8 +87,6 @@ const Search = () => {
       newButton.click();
     }
   }, [imageDisplays]);
-  
-
 
   useEffect(() => {
     if (imageUrls.length > 0) {
@@ -85,10 +100,10 @@ const Search = () => {
       <div className='selection-wrapper'>
         {imageDisplays.map(imageDisplay => imageDisplay)}
       </div>
-      <form className="search-container" onSubmit={handleFormSubmit}>
-        <Autocomplete
+      <form className="search-container" onSubmit={event => handleFormSubmit(event, searchTerm)}>
+        <Autocomplete 
           freeSolo
-          options={options}
+          options={options.map(movie => movie.title)}
           renderInput={params => (
             <TextField
               {...params}
@@ -106,6 +121,7 @@ const Search = () => {
           renderOption={option => <div className="search-option">{option}</div>}
           getOptionLabel={option => option}
           popupIcon={<div className="search-indicator">&#x25BC;</div>}
+          onSelect={event => setSearchTerm(event.target.value)}
         />
         <button className="search-button" type="submit">Submit</button>
       </form>

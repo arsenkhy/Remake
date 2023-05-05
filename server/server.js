@@ -53,9 +53,15 @@ app.get('/search', cache('5 minutes'), async (req, res) => {
 
 app.post('/uploadMovie', async (req, res) => {
   try {
+    const day = req.body.day;
+    const existingMovie = await Movie.findOne({ day });
+    if (existingMovie) {
+      return res.status(400).json({ message: 'Movie with this day already exists' });
+    }
+
     const movie = new Movie({
-      title: req.body.title,
-      year: req.body.year,
+      day,
+      movieID: req.body.movieID,
       images: req.body.images
     }); 
 
@@ -77,9 +83,9 @@ app.get('/movies', async (req, res) => {
   }
 });
 
-app.get('/movies/:id', async (req, res) => {
+app.get('/movies/day/:day', async (req, res) => {
   try {
-    const movie = await Movie.findById(req.params.id);
+    const movie = await Movie.findOne({ day: req.params.day });
     if (!movie) {
       return res.status(404).json({ message: 'Movie not found' });
     }
