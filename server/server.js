@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
@@ -5,7 +7,6 @@ const path = require('path');
 const apicache = require('apicache');
 const mongoose = require('mongoose');
 const Movie = require('./models/movieModel');
-require('dotenv').config();
 
 const app = express();
 const cache = apicache.middleware;
@@ -19,6 +20,12 @@ app.use(express.json());
 // app.use(express.static(path.join(__dirname, 'build')));
 //////////////////////////////////////
 
+// Environment variables
+const PORT = process.env.PORT || 5050;
+const MOVIE_API_URL = process.env.MOVIE_API_URL;
+const MOVIE_API_KEY = process.env.MOVIE_API_KEY;
+
+
 // Testing
 app.get('/api', (req, res) => {
   const data = { message: 'Hello from the API!' };
@@ -28,9 +35,9 @@ app.get('/api', (req, res) => {
 app.get('/search', cache('5 minutes'), async (req, res) => {
   const { query } = req.query;
   try {
-    const response = await axios.get('https://api.themoviedb.org/3/search/movie', {
+    const response = await axios.get(MOVIE_API_URL, {
       params: {
-        api_key: '8baba8ab6b8bbe247645bcae7df63d0d',
+        api_key: MOVIE_API_KEY,
         query: query
       }
     });
@@ -97,8 +104,6 @@ app.get('/movies/day/:day', async (req, res) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 5050;
-
 mongoose.connect(process.env.DB_STRING, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('Connected to database');
